@@ -76,6 +76,7 @@ class _BhajanScreenState extends State<BhajanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Color(0xFFfff8c3),
         appBar: AppBar(
           leading: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -127,40 +128,95 @@ class _BhajanScreenState extends State<BhajanScreen> {
             ),
           ],
         ),
-        body: displayedPdfFiles.isEmpty
-            ? Center(
-                child: Text(
-                  "No PDFs found",
-                  style: GoogleFonts.poppins(color: Colors.white, fontSize: 18),
-                ),
-              )
-            : ListView.builder(
-                itemCount: displayedPdfFiles.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                      displayedPdfFiles[index]["name"]!,
-                      style: GoogleFonts.poppins(color: Colors.black),
-                    ),
-                    trailing: Icon(Icons.arrow_forward),
-                    onTap: () async {
-                      String? filePath =
-                          await loadPDF(displayedPdfFiles[index]["fileName"]!);
-                      if (filePath != null) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PDFScreen(
-                              path: filePath,
-                              title: displayedPdfFiles[index]["name"]!,
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                  );
-                },
-              ));
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              Text(
+                "आत्म विभोर के सूत्र",
+                style: GoogleFonts.poppins(
+                    color: Color(0xFFaa3117),
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700),
+              ),
+              Text(
+                "श्री श्री बाबा श्री जी",
+                style: GoogleFonts.poppins(
+                    color: Color(0xFFaa3117),
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Expanded(
+                child: displayedPdfFiles.isEmpty
+                    ? Center(
+                        child: Text(
+                          "No PDFs found",
+                          style: GoogleFonts.poppins(
+                              color: Colors.white, fontSize: 18),
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: displayedPdfFiles.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 0,
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5))),
+                                child: ListTile(
+                                  title: Text(
+                                    displayedPdfFiles[index]["name"]!,
+                                    style: GoogleFonts.poppins(
+                                        color: Color(0xFFaa3117),
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  leading: Icon(
+                                    LineIcons.fileInvoice,
+                                    color: Color(0xFFfe4c4d),
+                                  ),
+                                  onTap: () async {
+                                    String? filePath = await loadPDF(
+                                        displayedPdfFiles[index]["fileName"]!);
+                                    if (filePath != null) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => PDFScreen(
+                                            path: filePath,
+                                            title: displayedPdfFiles[index]
+                                                ["name"]!,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              )
+                            ],
+                          );
+                        },
+                      ),
+              ),
+            ],
+          ),
+        ));
   }
 
   Future<String?> loadPDF(String assetPath) async {
@@ -190,8 +246,17 @@ class PDFScreen extends StatelessWidget {
       appBar: AppBar(
           backgroundColor: const Color(0xFFfe4c4d),
           centerTitle: true,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              LineIcons.arrowLeft,
+              color: Colors.yellow,
+            ),
+          ),
           title: Text(title,
-              style: GoogleFonts.poppins(color: Colors.white, fontSize: 15))),
+              style: GoogleFonts.poppins(color: Colors.yellow, fontSize: 15))),
       body: PDFView(
         filePath: path,
         enableSwipe: true,
